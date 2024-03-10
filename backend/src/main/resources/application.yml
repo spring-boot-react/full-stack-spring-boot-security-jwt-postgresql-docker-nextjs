@@ -1,0 +1,26 @@
+##############################
+###### GENERAL SETTINGS ######
+##############################
+server:
+  port: ${SERVER_PORT}
+  error:
+    include-message: always
+    include-stacktrace: never
+  servlet:
+    context-path: ${SERVER_SERVLET_CONTEXT_PATH}
+
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME}
+  config:
+    import:
+      - optional:file:.env[.properties]
+      - application-database.yml
+      - application-security.yml
+
+##############################
+#### SPRING DEBUG SETTING ####
+##############################
+logging:
+  level:
+    root: info

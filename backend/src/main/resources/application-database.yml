@@ -1,0 +1,23 @@
+##############################
+###### DATABASE SETTINGS #####
+##############################
+spring:
+  datasource:
+    url: jdbc:postgresql://${SERVER_URI}:${POSTGRES_PORT}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASS}
+    driver-class-name: org.postgresql.Driver
+
+##############################
+######## JPA SETTINGS ########
+##############################
+  jpa:
+    hibernate:
+      # change to 'update' if you want data to remain in db
+      ddl-auto: create-drop
+    show-sql: false
+    #    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
