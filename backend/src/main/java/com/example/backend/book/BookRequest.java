@@ -8,8 +8,6 @@ import lombok.Setter;
 @Setter
 @Builder
 public class BookRequest {
-
-    private Integer id;
     private String author;
     private String isbn;
 }

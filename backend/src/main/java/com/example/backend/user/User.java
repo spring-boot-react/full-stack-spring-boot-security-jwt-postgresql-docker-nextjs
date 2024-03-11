@@ -1,5 +1,6 @@
 package com.example.backend.user;
 
+import com.example.backend.role.Role;
 import com.example.backend.token.Token;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

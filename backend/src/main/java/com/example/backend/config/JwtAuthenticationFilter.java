@@ -1,12 +1,13 @@
 package com.example.backend.config;
 
-import com.example.backend.token.TokenRepository;
+import com.example.backend.token.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtService jwtService;
   private final UserDetailsService userDetailsService;
-  private final TokenRepository tokenRepository;
+  private final TokenService tokenService;
 
   @Override
   protected void doFilterInternal(
@@ -30,25 +31,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       @NonNull HttpServletResponse response,
       @NonNull FilterChain filterChain
   ) throws ServletException, IOException {
-    if (request.getServletPath().contains("/api/v1/auth")) {
+    final String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
       filterChain.doFilter(request, response);
       return;
     }
-    final String authHeader = request.getHeader("Authorization");
-    final String jwt;
-    final String userEmail;
-    if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-      filterChain.doFilter(request, response);
-      return;
-    }
-    jwt = authHeader.substring(7);
-    userEmail = jwtService.extractUsername(jwt);
+    final String jwt = authorizationHeader.substring(7);
+    final String userEmail = jwtService.extractUsername(jwt);
     if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-      UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-      var isTokenValid = tokenRepository.findByToken(jwt)
-          .map(t -> !t.isExpired() && !t.isRevoked())
-          .orElse(false);
-      if (jwtService.isTokenValid(jwt, userDetails) && isTokenValid) {
+      UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+      if (jwtService.isTokenValid(jwt, userDetails) && Boolean.TRUE.equals(tokenService.isTokenValid(jwt))) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
             userDetails,
             null,

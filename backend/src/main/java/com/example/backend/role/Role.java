@@ -1,4 +1,4 @@
-package com.example.backend.user;
+package com.example.backend.role;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.example.backend.user.Permission.ADMIN_CREATE;
-import static com.example.backend.user.Permission.ADMIN_DELETE;
-import static com.example.backend.user.Permission.ADMIN_READ;
-import static com.example.backend.user.Permission.ADMIN_UPDATE;
-import static com.example.backend.user.Permission.MANAGER_CREATE;
-import static com.example.backend.user.Permission.MANAGER_DELETE;
-import static com.example.backend.user.Permission.MANAGER_READ;
-import static com.example.backend.user.Permission.MANAGER_UPDATE;
+import static com.example.backend.role.Permission.ADMIN_CREATE;
+import static com.example.backend.role.Permission.ADMIN_DELETE;
+import static com.example.backend.role.Permission.ADMIN_READ;
+import static com.example.backend.role.Permission.ADMIN_UPDATE;
+import static com.example.backend.role.Permission.MANAGER_CREATE;
+import static com.example.backend.role.Permission.MANAGER_DELETE;
+import static com.example.backend.role.Permission.MANAGER_READ;
+import static com.example.backend.role.Permission.MANAGER_UPDATE;
 
 @Getter
 @RequiredArgsConstructor
@@ -51,7 +51,7 @@ public enum Role {
   public List<SimpleGrantedAuthority> getAuthorities() {
     var authorities = getPermissions()
             .stream()
-            .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
+            .map(permission -> new SimpleGrantedAuthority(permission.getAuthority()))
             .collect(Collectors.toList());
     authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
     return authorities;

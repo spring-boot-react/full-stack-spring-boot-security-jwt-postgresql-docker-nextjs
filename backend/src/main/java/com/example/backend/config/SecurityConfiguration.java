@@ -11,18 +11,17 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-import static com.example.backend.user.Permission.ADMIN_CREATE;
-import static com.example.backend.user.Permission.ADMIN_DELETE;
-import static com.example.backend.user.Permission.ADMIN_READ;
-import static com.example.backend.user.Permission.ADMIN_UPDATE;
-import static com.example.backend.user.Permission.MANAGER_CREATE;
-import static com.example.backend.user.Permission.MANAGER_DELETE;
-import static com.example.backend.user.Permission.MANAGER_READ;
-import static com.example.backend.user.Permission.MANAGER_UPDATE;
-import static com.example.backend.user.Role.ADMIN;
-import static com.example.backend.user.Role.MANAGER;
+import static com.example.backend.role.Permission.ADMIN_CREATE;
+import static com.example.backend.role.Permission.ADMIN_DELETE;
+import static com.example.backend.role.Permission.ADMIN_READ;
+import static com.example.backend.role.Permission.ADMIN_UPDATE;
+import static com.example.backend.role.Permission.MANAGER_CREATE;
+import static com.example.backend.role.Permission.MANAGER_DELETE;
+import static com.example.backend.role.Permission.MANAGER_READ;
+import static com.example.backend.role.Permission.MANAGER_UPDATE;
+import static com.example.backend.role.Role.ADMIN;
+import static com.example.backend.role.Role.MANAGER;
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -35,7 +34,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 public class SecurityConfiguration {
 
-    private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**",
+    private static final String[] WHITE_LIST_URL = {"/auth/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -46,9 +45,10 @@ public class SecurityConfiguration {
             "/swagger-ui/**",
             "/webjars/**",
             "/swagger-ui.html"};
+    private static final String MANAGEMENT_ENDPOINT = "/management/**";
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
-    private final LogoutHandler logoutHandler;
+    private final CustomLogoutHandler customLogoutHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -57,11 +57,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
-                                .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
-                                .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
-                                .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
-                                .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())
-                                .requestMatchers(DELETE, "/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name())
+                                .requestMatchers(MANAGEMENT_ENDPOINT).hasAnyRole(ADMIN.name(), MANAGER.name())
+                                .requestMatchers(GET, MANAGEMENT_ENDPOINT).hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
+                                .requestMatchers(POST, MANAGEMENT_ENDPOINT).hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
+                                .requestMatchers(PUT, MANAGEMENT_ENDPOINT).hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())
+                                .requestMatchers(DELETE, MANAGEMENT_ENDPOINT).hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name())
                                 .anyRequest()
                                 .authenticated()
                 )
@@ -69,12 +69,10 @@ public class SecurityConfiguration {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout ->
-                        logout.logoutUrl("/api/v1/auth/logout")
-                                .addLogoutHandler(logoutHandler)
+                        logout.logoutUrl("/auth/logout")
+                                .addLogoutHandler(customLogoutHandler)
                                 .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-                )
-        ;
-
+                );
         return http.build();
     }
 }

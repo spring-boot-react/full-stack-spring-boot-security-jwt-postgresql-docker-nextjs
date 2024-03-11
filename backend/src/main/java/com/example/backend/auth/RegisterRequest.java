@@ -1,6 +1,6 @@
 package com.example.backend.auth;
 
-import com.example.backend.user.Role;
+import com.example.backend.role.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

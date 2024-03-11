@@ -1,7 +1,6 @@
 package com.example.backend.config;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.util.Date;
@@ -9,15 +8,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import io.jsonwebtoken.security.SignatureException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 
+@Slf4j
 @Service
 public class JwtService {
 
+  @Value("${application.security.jwt.issuer}")
+  private String issuer;
   @Value("${application.security.jwt.secret-key}")
   private String secretKey;
   @Value("${application.security.jwt.expiration}")
@@ -25,13 +29,30 @@ public class JwtService {
   @Value("${application.security.jwt.refresh-token.expiration}")
   private long refreshExpiration;
 
-  public String extractUsername(String token) {
-    return extractClaim(token, Claims::getSubject);
+  public String extractUsername(String jwt) {
+    return extractClaim(jwt, Claims::getSubject);
   }
 
-  public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-    final Claims claims = extractAllClaims(token);
-    return claimsResolver.apply(claims);
+  public String extractIssuer(String jwt) {
+    return extractClaim(jwt, Claims::getIssuer);
+  }
+
+  public <T> T extractClaim(String jwt, Function<Claims, T> claimsResolver) {
+    try {
+      return claimsResolver.apply(extractAllClaims(jwt));
+    } catch (SignatureException e) {
+      // TODO register IP when invalid JWT is provided
+      log.error("Invalid signature: " + e.getMessage());
+    } catch (MalformedJwtException e) {
+      // TODO register IP when malformed JWT is provided
+      log.error("Malformed JWT: " + e.getMessage());
+    } catch (ExpiredJwtException e) {
+      log.error("Expired JWT: " + e.getMessage());
+    } catch (UnsupportedJwtException e) {
+      // TODO register IP when unsupported JWT is provided
+      log.error("Unsupported JWT: " + e.getMessage());
+    }
+    return null;
   }
 
   public String generateToken(UserDetails userDetails) {
@@ -59,6 +80,7 @@ public class JwtService {
     return Jwts
             .builder()
             .claims(extraClaims)
+            .issuer(issuer)
             .subject(userDetails.getUsername())
             .issuedAt(new Date(System.currentTimeMillis()))
             .expiration(new Date(System.currentTimeMillis() + expiration))
@@ -66,9 +88,10 @@ public class JwtService {
             .compact();
   }
 
-  public boolean isTokenValid(String token, UserDetails userDetails) {
-    final String username = extractUsername(token);
-    return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+  public boolean isTokenValid(String jwt, UserDetails userDetails) {
+    final String usernameInJwt = extractUsername(jwt);
+    final String issuerInJwt = extractIssuer(jwt);
+    return (usernameInJwt.equals(userDetails.getUsername())) && issuerInJwt.equals(issuer) && !isTokenExpired(jwt);
   }
 
   private boolean isTokenExpired(String token) {

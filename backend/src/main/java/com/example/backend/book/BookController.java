@@ -15,18 +15,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookController {
 
-    private final BookService service;
+    private final BookService bookService;
 
     @PostMapping
-    public ResponseEntity<?> save(
+    public ResponseEntity<Object> save(
             @RequestBody BookRequest request
     ) {
-        service.save(request);
+        bookService.save(request);
         return ResponseEntity.accepted().build();
     }
 
     @GetMapping
     public ResponseEntity<List<Book>> findAllBooks() {
-        return ResponseEntity.ok(service.findAll());
+        return ResponseEntity.ok(bookService.findAll());
     }
 }

@@ -24,17 +24,17 @@ public class Token {
 
   @Id
   @GeneratedValue
-  public Integer id;
+  private Integer id;
 
   @Column(unique = true)
-  public String token;
+  private String token;
 
   @Enumerated(EnumType.STRING)
-  public TokenType tokenType = TokenType.BEARER;
+  private TokenType tokenType = TokenType.BEARER;
 
-  public boolean revoked;
+  private boolean revoked;
 
-  public boolean expired;
+  private boolean expired;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")

@@ -16,7 +16,9 @@
 	<properties>
 		<java.version>21</java.version>
 		<springdoc.version>2.3.0</springdoc.version>
+		<modelmapper.version>3.2.0</modelmapper.version>
 		<jjwt.version>0.12.5</jjwt.version>
+		<bouncycastle.version>1.77</bouncycastle.version>
 	</properties>
 	<dependencies>
 		<!-- Support Dependencies -->
@@ -44,6 +46,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>${modelmapper.version}</version>
+		</dependency>
 
 		<!-- Security Dependencies -->
 		<dependency>
@@ -64,6 +71,11 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
 			<version>${jjwt.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk18on</artifactId>
+			<version>${bouncycastle.version}</version>
 		</dependency>
 
 		<!-- Servlet Web, JPA, DB Dependencies -->
