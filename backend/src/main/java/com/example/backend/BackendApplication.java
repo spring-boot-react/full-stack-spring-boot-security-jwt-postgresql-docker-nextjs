@@ -1,6 +1,6 @@
 package com.example.backend;
 
-import com.example.backend.auth.AuthenticationService;
+import com.example.backend.auth.AuthenticationServiceImpl;
 import com.example.backend.auth.RegisterRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -23,7 +23,7 @@ public class BackendApplication {
 
 	@Bean
 	public CommandLineRunner commandLineRunner(
-			AuthenticationService service
+			AuthenticationServiceImpl service
 	) {
 		return args -> {
 			var admin = RegisterRequest.builder()
