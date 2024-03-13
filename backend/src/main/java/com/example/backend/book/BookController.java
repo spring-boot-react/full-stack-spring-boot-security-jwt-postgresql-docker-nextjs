@@ -21,8 +21,7 @@ public class BookController {
     public ResponseEntity<Object> save(
             @RequestBody BookRequest request
     ) {
-        bookService.save(request);
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.ok(bookService.save(request));
     }
 
     @GetMapping

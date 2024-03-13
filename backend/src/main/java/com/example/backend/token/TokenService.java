@@ -27,8 +27,8 @@ public class TokenService {
         tokenRepository.save(newToken);
     }
 
-    public void revokeAllTokensByUser(User user) {
-        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+    public void revokeAllTokensByUserId(int id) {
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(id);
         if (validUserTokens.isEmpty())
             return;
         validUserTokens.forEach(token -> {

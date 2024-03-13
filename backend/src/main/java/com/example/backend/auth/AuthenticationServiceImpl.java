@@ -24,6 +24,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   @Override
   public AuthenticationResponse register(RegisterRequest request) {
+    // TODO Use mapper to model and model to mapper
     var user = User.builder()
             .firstname(request.getFirstname())
             .lastname(request.getLastname())
@@ -53,8 +54,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         .orElseThrow();
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
-    tokenService.revokeAllTokensByUser(user);
+    tokenService.revokeAllTokensByUserId(user.getId());
     tokenService.saveUserToken(user, jwtToken);
+    // TODO Use mapper to model and model to mapper
     return AuthenticationResponse.builder()
         .accessToken(jwtToken)
             .refreshToken(refreshToken)
@@ -83,8 +85,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       return null;
     }
     var accessToken = jwtService.generateToken(user);
-    tokenService.revokeAllTokensByUser(user);
+    tokenService.revokeAllTokensByUserId(user.getId());
     tokenService.saveUserToken(user, accessToken);
+    // TODO Use mapper to model and model to mapper
     return AuthenticationResponse.builder()
             .accessToken(accessToken)
             .refreshToken(refreshToken)
