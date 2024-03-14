@@ -37,21 +37,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       return;
     }
     final String jwt = authorizationHeader.substring(7);
-    final String userEmail = jwtService.extractUsername(jwt);
-    if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+    final String userEmail = jwtService.extractSubject(jwt);
+    if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null && isTokenValid(jwt, userEmail)) {
       UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-      if (jwtService.isTokenValid(jwt, userDetails) && Boolean.TRUE.equals(tokenService.isTokenValid(jwt))) {
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-            userDetails,
-            null,
-            userDetails.getAuthorities()
-        );
-        authToken.setDetails(
-            new WebAuthenticationDetailsSource().buildDetails(request)
-        );
-        SecurityContextHolder.getContext().setAuthentication(authToken);
-      }
+      UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+          userDetails,
+          null,
+          userDetails.getAuthorities()
+      );
+      authToken.setDetails(
+          new WebAuthenticationDetailsSource().buildDetails(request)
+      );
+      SecurityContextHolder.getContext().setAuthentication(authToken);
     }
     filterChain.doFilter(request, response);
+  }
+
+  private boolean isTokenValid(String jwt, String userEmail) {
+    return jwtService.isTokenValid(jwt, userEmail) && Boolean.TRUE.equals(tokenService.isTokenValid(jwt));
   }
 }

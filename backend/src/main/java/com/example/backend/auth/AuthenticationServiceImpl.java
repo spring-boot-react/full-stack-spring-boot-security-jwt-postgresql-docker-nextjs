@@ -33,11 +33,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             .role(request.getRole())
             .build();
     var savedUser = userRepository.save(user);
-    var jwtToken = jwtService.generateToken(user);
-    var refreshToken = jwtService.generateRefreshToken(user);
-    tokenService.saveUserToken(savedUser, jwtToken);
+    var jwt = jwtService.generateToken(user.getEmail());
+    var refreshToken = jwtService.generateRefreshToken(user.getEmail());
+    tokenService.saveTokenByUser(jwt, savedUser);
     return AuthenticationResponse.builder()
-            .accessToken(jwtToken)
+            .accessToken(jwt)
             .refreshToken(refreshToken)
             .build();
   }
@@ -52,13 +52,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     );
     var user = userRepository.findByEmail(request.getEmail())
         .orElseThrow();
-    var jwtToken = jwtService.generateToken(user);
-    var refreshToken = jwtService.generateRefreshToken(user);
+    var jwt = jwtService.generateToken(user.getEmail());
+    var refreshToken = jwtService.generateRefreshToken(user.getEmail());
     tokenService.revokeAllTokensByUserId(user.getId());
-    tokenService.saveUserToken(user, jwtToken);
+    tokenService.saveTokenByUser(jwt, user);
     // TODO Use mapper to model and model to mapper
     return AuthenticationResponse.builder()
-        .accessToken(jwtToken)
+        .accessToken(jwt)
             .refreshToken(refreshToken)
         .build();
   }
@@ -75,21 +75,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       return null;
     }
     refreshToken = authHeader.substring(7);
-    userEmail = jwtService.extractUsername(refreshToken);
+    userEmail = jwtService.extractSubject(refreshToken);
     if (userEmail == null) {
       return null;
     }
     var user = userRepository.findByEmail(userEmail)
             .orElseThrow();
-    if (!jwtService.isTokenValid(refreshToken, user)) {
+    if (!jwtService.isTokenValid(refreshToken, user.getEmail())) {
       return null;
     }
-    var accessToken = jwtService.generateToken(user);
+    var jwt = jwtService.generateToken(user.getEmail());
     tokenService.revokeAllTokensByUserId(user.getId());
-    tokenService.saveUserToken(user, accessToken);
+    tokenService.saveTokenByUser(jwt, user);
     // TODO Use mapper to model and model to mapper
     return AuthenticationResponse.builder()
-            .accessToken(accessToken)
+            .accessToken(jwt)
             .refreshToken(refreshToken)
             .build();
   }
