@@ -1,5 +1,7 @@
 package com.example.backend.config;
 
+import com.example.backend.payload.i18n.TranslateService;
+import com.example.backend.payload.request.HttpRequestService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -9,6 +11,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import io.jsonwebtoken.security.SignatureException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ import javax.crypto.SecretKey;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class JwtServiceImpl implements JwtService {
 
   @Value("${application.security.jwt.issuer}")
@@ -27,6 +31,9 @@ public class JwtServiceImpl implements JwtService {
   private long jwtExpiration;
   @Value("${application.security.jwt.refresh-token.expiration}")
   private long refreshExpiration;
+
+  private final TranslateService translateService;
+  private final HttpRequestService httpRequestService;
 
   @Override
   public String extractSubject(String jwt) {
@@ -42,15 +49,16 @@ public class JwtServiceImpl implements JwtService {
       return claimsResolver.apply(extractAllClaims(jwt));
     } catch (SignatureException e) {
       // TODO register IP when invalid JWT is provided
-      log.error("Invalid signature: " + e.getMessage());
+      this.logErrorMessage("log.jwt.si.invalid.jwt", e.getMessage());
     } catch (MalformedJwtException e) {
       // TODO register IP when malformed JWT is provided
-      log.error("Malformed JWT: " + e.getMessage());
+      this.logErrorMessage("log.jwt.si.malformed.jwt", e.getMessage());
     } catch (ExpiredJwtException e) {
+      this.logErrorMessage("log.jwt.si.expired.jwt", e.getMessage());
       log.error("Expired JWT: " + e.getMessage());
     } catch (UnsupportedJwtException e) {
       // TODO register IP when unsupported JWT is provided
-      log.error("Unsupported JWT: " + e.getMessage());
+      this.logErrorMessage("log.jwt.si.unsupported.jwt", e.getMessage());
     }
     return null;
   }
@@ -117,5 +125,13 @@ public class JwtServiceImpl implements JwtService {
   private SecretKey getSignInKey() {
     byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     return Keys.hmacShaKeyFor(keyBytes);
+  }
+
+  private void logErrorMessage(String code, String error) {
+    log.error(translateService.getLogMessage(code),
+            httpRequestService.getIp(),
+            httpRequestService.getUsername(),
+            error
+    );
   }
 }
