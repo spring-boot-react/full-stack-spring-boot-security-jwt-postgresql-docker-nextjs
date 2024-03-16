@@ -449,6 +449,44 @@
 			"response": []
 		},
 		{
+			"name": "(secured) GET by ID > BookController endpoint",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "fill in token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "de",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8081/api/v1/books/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"books",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "(secured) POST > BookController endpoint",
 			"request": {
 				"auth": {
