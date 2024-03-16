@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Locale;
@@ -16,7 +15,7 @@ import java.util.Locale;
  * This class returns the related message in the provided request locale.
  * The message files are located in resources/i18n
  *
- * @author Jeffrey Spaan
+ * @author Full Stack Developer
  * @since 2024-03-16
  */
 

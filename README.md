@@ -1,8 +1,9 @@
 # Full Stack application with Spring Boot backend, Security with JWT, PostgreSQL database, Docker containerization and a Next.js frontend
 
 <b>Author:</b> <a href="https://github.com/spring-boot-react" target="_blank">Full Stack Developer</a><br>
+<b>Collaborator(s):</b> <a href="https://github.com/darksos34" target="_blank">Jordy Coder</a><br>
 <b>Created:</b> 2024-03-11<br>
-<b>Last updated:</b> 2024-03-11
+<b>Last updated:</b> 2024-03-16
 
 This repository serves as a demonstration on how to create a robust and scalable security application with <b>Spring Security and JWT</b>.<br>
 Within this repository, the following technologies are applied:
@@ -29,6 +30,12 @@ Open a new command line.
 
 ```bash
 git clone https://github.com/spring-boot-react/full-stack-spring-boot-security-jwt-postgresql-docker-nextjs.git
+```
+
+- Go into the ```backend``` folder:
+
+```bash
+cd backend
 ```
 
 - Build the project using Maven:
@@ -66,3 +73,46 @@ This file can be found in ```src/main/resources/data/postman/import/collection-i
 <i>**NOTE:** Use the tokens, provided to you in the terminal, to access the secured endpoints:</i>
 
 ![05-terminal-tokens](https://github.com/spring-boot-react/full-stack-spring-boot-security-jwt-postgresql-docker-nextjs/blob/main/images/05-terminal-tokens.jpg)
+
+## 5 I18N Internationalization
+
+I18N Internationalization is implemented as part of the raised enhancement issue [Implement I18N Internationalization](https://github.com/spring-boot-react/full-stack-spring-boot-security-jwt-postgresql-docker-nextjs/issues/4).
+
+### 5.1 Internationalization with logging
+
+A default logging language is set within the `.env` file.<br>
+Key: `LOGGING_LANGUAGE`<br>
+The value can be either of the following:
+`en`
+`de`
+`nl`
+
+The already set logging languages will change language automatically.
+
+To use this functionality, simply use following code:
+```java
+translateService.getLogMessage(String code);
+```
+
+`code`: for example `jwt.si.invalid.signature`
+
+The code is the key you use within the `main/resources/i18n` properties files.
+
+<b>NOTE:</b> you can also make use of arguments.
+
+### 5.2 Internationalization with JSON response messages
+
+To use this functionality, see following code example:
+
+```java
+translateService.getMessage(String code, String[] args);
+
+private Book findById(int id) {
+  return bookRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("book.si.not.found",  new String[]{String.valueOf(id)}));
+}
+```
+
+The code is the key you use within the `main/resources/i18n` properties files.
+
+<b>NOTE:</b> this example uses arguments, which can be accessed within the properties file accordingly.
