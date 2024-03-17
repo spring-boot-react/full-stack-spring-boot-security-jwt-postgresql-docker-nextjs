@@ -15,8 +15,6 @@ spring:
     hibernate:
       # change to 'update' if you want data to remain in db
       ddl-auto: create-drop
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
     #    show-sql: true
     properties:
