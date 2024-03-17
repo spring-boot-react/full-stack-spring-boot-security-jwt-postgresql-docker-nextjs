@@ -12,6 +12,7 @@ server:
 spring:
   application:
     name: ${SPRING_APPLICATION_NAME}
+    error-uri: /error
   config:
     import:
       - optional:file:.env[.properties]
@@ -19,9 +20,19 @@ spring:
       - application-security.yml
 
 ##############################
+######### I18N CONFIG ########
+##############################
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    cache-duration: 60
+    fallback-to-system-locale: false
+
+##############################
 #### SPRING DEBUG SETTING ####
 ##############################
 logging:
+  language: ${LOGGING_LANGUAGE}
   level:
     root: info
     org.springframework.web: ERROR
