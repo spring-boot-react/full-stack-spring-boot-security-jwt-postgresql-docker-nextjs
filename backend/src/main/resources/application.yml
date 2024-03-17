@@ -35,3 +35,4 @@ logging:
   language: ${LOGGING_LANGUAGE}
   level:
     root: info
+    org.springframework.web: ERROR
