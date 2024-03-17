@@ -1,5 +1,6 @@
 package com.example.backend.user;
 
+import com.example.backend.payload.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAllUsers() {
+    public List<User> getAllUsers() {
         return  userRepository.findAll();
+    }
+
+    @Override
+    public ResponseEntity<User> getUserById(User id) {
+        return ResponseEntity.ok().body(this.findById(id));
+    }
+
+    @Override
+    public void deleteUserById(User id) {
+
+    }
+    @Override
+    public ResponseEntity<User> changeUserInfo() {
+        return null;
+    }
+
+    private User findById(User id) {
+        return userRepository.findById(id.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("user.si.not.found",  new String[]{String.valueOf(id)}));
     }
 }
