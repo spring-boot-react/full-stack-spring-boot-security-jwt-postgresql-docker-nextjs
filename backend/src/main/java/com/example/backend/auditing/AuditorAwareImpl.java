@@ -8,9 +8,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
-public class AuditorAwareImpl implements AuditorAware<Integer> {
+public class AuditorAwareImpl implements AuditorAware<Long> {
     @Override
-    public Optional<Integer> getCurrentAuditor() {
+    public Optional<Long> getCurrentAuditor() {
         Authentication authentication =
                 SecurityContextHolder
                         .getContext()

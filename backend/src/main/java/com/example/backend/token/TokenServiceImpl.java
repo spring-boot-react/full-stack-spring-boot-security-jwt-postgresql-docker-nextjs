@@ -30,7 +30,7 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public void revokeAllTokensByUserId(int id) {
+    public void revokeAllTokensByUserId(Long id) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(id);
         if (validUserTokens.isEmpty())
             return;
