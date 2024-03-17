@@ -50,21 +50,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<User> getUserById(User id) {
+    public ResponseEntity<User> getUserById(Long id) {
         return ResponseEntity.ok().body(this.findById(id));
     }
 
     @Override
-    public void deleteUserById(User id) {
-
+    public void changeUserInfo(User user) {
+         userRepository.save(user);
     }
+
     @Override
-    public ResponseEntity<User> changeUserInfo() {
-        return null;
+    public void deleteUserById(User id) {
+        // TODO document why this method is empty
     }
 
-    private User findById(User id) {
-        return userRepository.findById(id.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("user.si.not.found",  new String[]{String.valueOf(id)}));
+    private User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("user.si.not.found",  new String[]{Long.toString(id)}));
     }
 }
