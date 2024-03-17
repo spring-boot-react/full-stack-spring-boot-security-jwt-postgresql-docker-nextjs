@@ -1,16 +1,13 @@
 package com.example.backend.user;
 
+import com.example.backend.book.Book;
 import org.springframework.http.ResponseEntity;
-
 import java.security.Principal;
-import java.util.Optional;
+import java.util.List;
 
 public interface UserService {
 
     public abstract ResponseEntity<Object> changePassword(ChangePasswordRequest request, Principal currentUser);
-    public abstract ResponseEntity<User> getAllUsers();
-    public abstract Optional<User> getUserById(Long id);
-    public abstract void updateUser(User user);
-    public abstract void deleteUser(Long id);
+    public abstract List<User> findAllUsers();
 
 }

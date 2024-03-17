@@ -8,13 +8,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-/**
- *Authors: J.Spaan & J. Hamwijk
- */
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -48,39 +43,8 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.accepted().body(HttpStatus.ACCEPTED);
     }
 
-    /** TODO Write javadoc instead of all comments in the code
-     * @return
-     */
-    // Get all users
-    public ResponseEntity<User> getAllUsers() { // Generate function
-        List<User> users = new ArrayList<>();
-        userRepository.findAll() // Call JPA function via the Repository
-                .forEach(users::add);
-        return (ResponseEntity<User>) users;  //return list of users
+    @Override
+    public List<User> findAllUsers() {
+        return  userRepository.findAll();
     }
-
-    // Get user by ID
-    public Optional<User> getUserById(Long id) { // Generate function
-        return userRepository.findById(id); // Call JPA function via the Repository
-    }
-
-    // Update user
-    public void updateUser(User user) { // Generate function
-        userRepository.save(user); // Call JPA function via the Repository
-    }
-
-    // Delete user
-    public void deleteUser(Long id) { // Generate function
-        userRepository.deleteById(id); // Call JPA function via the Repository
-    }
-
-    // Find users by Email
-    public Optional<User> findByEmail(String email){
-        return userRepository.findByEmail(email);
-    }
-
-    //    // Back-end updatePassword in progress
-    //    public void updatePassword(String updatedPassword) {
-    //        userRepository.findByEmail(updatedPassword);
-    //    }
 }

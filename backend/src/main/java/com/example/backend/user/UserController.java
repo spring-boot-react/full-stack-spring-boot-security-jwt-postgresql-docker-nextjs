@@ -1,47 +1,46 @@
 package com.example.backend.user;
 
-import jakarta.validation.Valid;
+import com.example.backend.book.Book;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping(RequestConstants.USERS)
 @RequiredArgsConstructor
-public class UserController implements UserApi {
+@PreAuthorize("hasRole('ADMIN')")
+public class UserController{
 
     private final UserService userService;
+  private final UserRepository userRepository;
 
-    @Override
-    public ResponseEntity<Object> changePassword(@RequestBody ChangePasswordRequest request, Principal currentUser) {
-        return userService.changePassword(request, currentUser);
+    @PatchMapping
+    public ResponseEntity<Object> changePassword(
+            @RequestBody ChangePasswordRequest request,
+            Principal currentUser
+    ) {
+        userService.changePassword(request, currentUser);
+        return ResponseEntity.ok().build();
     }
 
-    //TODO getAllUsers Fix return statement
-    @Override
-    public List<User> getAllUsers() {
-        return (List<User>) userService.getAllUsers();
+    @GetMapping("/test")
+    @PreAuthorize(value = "hasAuthority('admin:read')")
+    public ResponseEntity<List<User>> findAllUsers(){
+        return ResponseEntity.ok(userService.findAllUsers());
     }
 
-    @Override
-    public Optional<User> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    @GetMapping("/all")
+    @PreAuthorize(value = "hasAuthority('admin:read')")
+    public String getAllUsers1(){
+        return "hello";
     }
 
-    @Override
-    public void updateUser(@Valid @RequestBody User user) {
-        userService.updateUser(user);
-    }
-
-    @Override
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-    }
 }
