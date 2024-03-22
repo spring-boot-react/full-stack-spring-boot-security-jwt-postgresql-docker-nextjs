@@ -3,7 +3,7 @@
 <b>Author:</b> <a href="https://github.com/spring-boot-react" target="_blank">Full Stack Developer</a><br>
 <b>Collaborator(s):</b> <a href="https://github.com/darksos34" target="_blank">Jordy Coder</a><br>
 <b>Created:</b> 2024-03-11<br>
-<b>Last updated:</b> 2024-03-16
+<b>Last updated:</b> 2024-03-22
 
 This repository serves as a demonstration on how to create a robust and scalable security application with <b>Spring Security and JWT</b>.<br>
 Within this repository, the following technologies are applied:

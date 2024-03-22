@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    /** TODO Remove all comments and add javadoc
+    /**
      * @param request ChangePasswordRequest,
      * @param connectedUser getPrincipal, find user by connectedUser
      * @return ResponseEntity.accepted().body(HttpStatus.ACCEPTED);
@@ -60,8 +60,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserById(User id) {
-        // TODO document why this method is empty
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
     }
 
     private User findById(Long id) {
