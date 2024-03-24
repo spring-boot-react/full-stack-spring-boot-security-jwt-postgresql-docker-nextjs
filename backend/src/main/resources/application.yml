@@ -10,6 +10,8 @@ server:
     context-path: ${SERVER_SERVLET_CONTEXT_PATH}
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
     name: ${SPRING_APPLICATION_NAME}
     error-uri: /error
