@@ -2,7 +2,6 @@ package com.example.backend.book;
 
 import com.example.backend.payload.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -13,14 +12,12 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
-    private final ModelMapper modelMapper;
 
     @Override
-    public Book saveBook(BookRequest request) {
-        // TODO Use mapper to model and model to mapper
+    public Book saveBook(Book bookDTO) {
         var book = Book.builder()
-                .author(request.getAuthor())
-                .isbn(request.getIsbn())
+                .author(bookDTO.getAuthor())
+                .isbn(bookDTO.getIsbn())
                 .build();
         return bookRepository.save(book);
     }

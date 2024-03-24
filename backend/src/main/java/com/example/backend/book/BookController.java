@@ -1,8 +1,14 @@
 package com.example.backend.book;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -12,12 +18,15 @@ import java.util.List;
 public class BookController {
 
     private final BookService bookService;
+    private final ModelMapper modelMapper;
 
     @PostMapping
-    public ResponseEntity<Object> save(
-            @RequestBody BookRequest request
+    public BookDTO save(
+            @RequestBody BookDTO bookDTO
     ) {
-        return ResponseEntity.ok(bookService.saveBook(request));
+        Book book = modelMapper.map(bookDTO, Book.class);
+        return modelMapper.map(bookService.saveBook(book), BookDTO.class);
+
     }
 
     @GetMapping("/{id}")
