@@ -1,0 +1,158 @@
+# full-stack-spring-boot-security-jwt-postgresql-docker-nextjs
+
+###
+# @name (create user) POST > Register - AuthenticationController endpoint
+POST http://localhost:8081/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "firstname": "testfirst",
+  "lastname": "testlast",
+  "email": "test@mail.com",
+  "password": "testpassword",
+  "role": "ADMIN"
+}
+
+###
+# @name (admin) POST > Authenticate - AuthenticationController endpoint
+POST http://localhost:8081/api/v1/auth/authenticate
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJpc3MiOiJGdWxsIFN0YWNrIERldmVsb3BlciIsInN1YiI6InRlc3RAZW1haWwuY29tIiwiaWF0IjoxNzEwNjg0OTkzLCJleHAiOjE3MTA3NzEzOTN9.i3GVnIsO69nnWHsn14xR7NbZqujZGinOdIP578LXjGfJVmwau6BeYAo8wnXlsPN0
+Content-Type: application/json
+
+{
+  "email": "admin@mail.com",
+  "password": "password"
+}
+
+###
+# @name (user) POST > Authenticate - AuthenticationController endpoint
+POST http://localhost:8081/api/v1/auth/authenticate
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJpc3MiOiJGdWxsIFN0YWNrIERldmVsb3BlciIsInN1YiI6InRlc3RAZW1haWwuY29tIiwiaWF0IjoxNzEwNjg0OTkzLCJleHAiOjE3MTA3NzEzOTN9.i3GVnIsO69nnWHsn14xR7NbZqujZGinOdIP578LXjGfJVmwau6BeYAo8wnXlsPN0
+Content-Type: application/json
+
+{
+  "email": "test@mail.com",
+  "password": "testpassword"
+}
+
+###
+# @name (unsecured) POST > Refresh Token - AuthenticationController endpoint
+POST http://localhost:8081/api/v1/auth/refresh-token
+Authorization: Bearer fill in token
+
+###
+# @name (unsecured) POST > Logout - Security Configuration endpoint
+POST http://localhost:8081/api/v1/auth/logout
+Authorization: Bearer fill in token
+
+###
+# @name (secured) GET > AdminController endpoint
+GET http://localhost:8081/api/v1/admin
+Authorization: Bearer fill in token
+
+###
+# @name (secured) GET > DemoController endpoint
+GET http://localhost:8081/api/v1/demo-controller
+Authorization: Bearer fill in token
+
+###
+# @name (secured) GET > UserController endpoint
+GET http://localhost:8081/api/v1/users/all
+Authorization: Bearer fill in token
+
+###
+# @name (secured) PATCH > UseController endpoint
+PATCH http://localhost:8081/api/v1/users/2
+Authorization: Bearer fill in token
+Content-Type: application/json
+
+{
+  "firstname": "patchtestfirst",
+  "lastname": "patchtestlast",
+  "email": "patchtest@email.com",
+  "password": "patchtestpassword",
+  "role": "USER"
+}
+
+###
+# @name (secured) DELETE> UserController endpoint
+DELETE http://localhost:8081/api/v1/users
+Authorization: Bearer fill in token
+Content-Type: application/json
+
+{
+  "id": 1,
+  "firstname": "patchtestfirst",
+  "lastname": "patchtestlast",
+  "email": "patchtest@email.com",
+  "password": "patchtestpassword",
+  "role": "USER"
+}
+
+###
+# @name (secured) POST > AdminController endpoint
+POST http://localhost:8081/api/v1/admin
+Authorization: Bearer fill in token
+
+###
+# @name (secured) PUT > AdminController endpoint
+PUT http://localhost:8081/api/v1/admin
+Authorization: Bearer fill in token
+
+###
+# @name (secured) DELETE > AdminController endpoint
+DELETE http://localhost:8081/api/v1/admin
+Authorization: Bearer fill in token
+
+###
+# @name (secured) GET > ManagementController endpoint
+GET http://localhost:8081/api/v1/management
+Authorization: Bearer fill in token
+
+###
+# @name (secured) POST > ManagementController endpoint
+POST http://localhost:8081/api/v1/management
+Authorization: Bearer fill in token
+
+###
+# @name (secured) POST > ManagementController endpoint
+PUT http://localhost:8081/api/v1/management
+Authorization: Bearer fill in token
+
+###
+# @name (secured) DELETE > ManagementController endpoint
+DELETE http://localhost:8081/api/v1/management
+Authorization: Bearer fill in token
+
+###
+# @name (secured) GET > BookController endpoint
+GET http://localhost:8081/api/v1/books
+Authorization: Bearer fill in token
+
+###
+# @name (secured) GET by ID > BookController endpoint
+GET http://localhost:8081/api/v1/books
+Authorization: Bearer fill in token
+
+###
+# @name (secured) POST > BookController endpoint
+POST http://localhost:8081/api/v1/books
+Authorization: Bearer fill in token
+Content-Type: application/json
+
+{
+  "author": 1,
+  "isbn": 123456
+}
+
+###
+# @name (secured) POST > UserController endpoint
+PATCH http://localhost:8081/api/v1/users/pass
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJpc3MiOiJGdWxsIFN0YWNrIERldmVsb3BlciIsInN1YiI6ImFkbWluQG1haWwuY29tIiwiaWF0IjoxNzEwNjY3MTEyLCJleHAiOjE3MTA3NTM1MTJ9.8rhNxWi2YdlUNRKxK6Pfke596GvWIUF8f7fwfJcVVSI-AZCbEKAgTZ8yAohsW3-X
+Content-Type: application/json
+
+{
+  "currentPassword": "password",
+  "newPassword": "newpassword",
+  "confirmationPassword": "newpassword"
+}

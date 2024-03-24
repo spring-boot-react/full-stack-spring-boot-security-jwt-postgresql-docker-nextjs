@@ -10,6 +10,6 @@ public interface UserService {
     public abstract List<User> getAllUsers();
     public abstract ResponseEntity<User> getUserById(Long id);
     public abstract void changeUserInfo(User user);
-    public abstract void deleteUserById(User id);
+    public abstract void deleteUserById(Long id);
 
 }

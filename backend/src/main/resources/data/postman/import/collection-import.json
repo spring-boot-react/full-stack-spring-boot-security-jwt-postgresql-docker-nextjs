@@ -1,13 +1,13 @@
 {
 	"info": {
-		"_postman_id": "60233e5b-e7e7-4054-8fe2-328583ddfc07",
+		"_postman_id": "7f703f55-1353-4fe3-9cd5-001ab214a729",
 		"name": "full-stack-spring-boot-security-jwt-postgresql-docker-nextjs",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21205305"
+		"_exporter_id": "10753644"
 	},
 	"item": [
 		{
-			"name": "(unsecured) POST > Register - AuthenticationController endpoint",
+			"name": "(create user) POST > Register - AuthenticationController endpoint",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -16,7 +16,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"firstname\": \"testfirst\",\r\n    \"lastname\": \"testlast\",\r\n    \"email\": \"test@email.com\",\r\n    \"password\": \"testpassword\",\r\n    \"role\": \"ADMIN\"\r\n}",
+					"raw": "{\r\n    \"firstname\": \"testfirst\",\r\n    \"lastname\": \"testlast\",\r\n    \"email\": \"test@mail.com\",\r\n    \"testpassword\": \"testpassword\",\r\n    \"role\": \"ADMIN\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -41,16 +41,64 @@
 			"response": []
 		},
 		{
-			"name": "(unsecured) POST > Authenticate - AuthenticationController endpoint",
+			"name": "(admin) POST > Authenticate - AuthenticationController endpoint",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJpc3MiOiJGdWxsIFN0YWNrIERldmVsb3BlciIsInN1YiI6InRlc3RAZW1haWwuY29tIiwiaWF0IjoxNzEwNjg0OTkzLCJleHAiOjE3MTA3NzEzOTN9.i3GVnIsO69nnWHsn14xR7NbZqujZGinOdIP578LXjGfJVmwau6BeYAo8wnXlsPN0",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"test@email.com\",\r\n    \"password\": \"testpassword\"\r\n}",
+					"raw": "{\r\n    \"email\": \"admin@mail.com\",\r\n    \"password\": \"testpassword\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/v1/auth/authenticate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(user) POST > Authenticate - AuthenticationController endpoint",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJpc3MiOiJGdWxsIFN0YWNrIERldmVsb3BlciIsInN1YiI6InRlc3RAZW1haWwuY29tIiwiaWF0IjoxNzEwNjg0OTkzLCJleHAiOjE3MTA3NzEzOTN9.i3GVnIsO69nnWHsn14xR7NbZqujZGinOdIP578LXjGfJVmwau6BeYAo8wnXlsPN0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"admin@mail.com\",\r\n    \"password\": \"password\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -139,6 +187,37 @@
 			"response": []
 		},
 		{
+			"name": "(secured) GET > AdminController endpoint",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "fill in token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/api/v1/admin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "(secured) GET > DemoController endpoint",
 			"request": {
 				"auth": {
@@ -170,7 +249,7 @@
 			"response": []
 		},
 		{
-			"name": "(secured) GET > AdminController endpoint",
+			"name": "(secured) GET > UserController endpoint",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -185,7 +264,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/api/v1/admin",
+					"raw": "http://localhost:8081/api/v1/users/all",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -194,8 +273,71 @@
 					"path": [
 						"api",
 						"v1",
-						"admin"
+						"users",
+						"all"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(secured) PATCH > UseController endpoint",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "fill in token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\": \"patchtestfirst\",\r\n    \"lastname\": \"patchtestlast\",\r\n    \"email\": \"patchtest@email.com\",\r\n    \"password\": \"patchtestpassword\",\r\n    \"role\": \"USER\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/v1/users/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "(secured) DELETE> UserController endpoint",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "fill in token",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": ""
 				}
 			},
 			"response": []
@@ -534,7 +676,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "fill in token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJpc3MiOiJGdWxsIFN0YWNrIERldmVsb3BlciIsInN1YiI6ImFkbWluQG1haWwuY29tIiwiaWF0IjoxNzEwNjY3MTEyLCJleHAiOjE3MTA3NTM1MTJ9.8rhNxWi2YdlUNRKxK6Pfke596GvWIUF8f7fwfJcVVSI-AZCbEKAgTZ8yAohsW3-X",
 							"type": "string"
 						}
 					]
@@ -551,7 +693,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/v1/users",
+					"raw": "http://localhost:8081/api/v1/users/pass",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -560,7 +702,8 @@
 					"path": [
 						"api",
 						"v1",
-						"users"
+						"users",
+						"pass"
 					]
 				}
 			},
